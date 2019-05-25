@@ -27,6 +27,12 @@ class SpecialBoilerplate extends SpecialPage {
     $this->setHeaders();
     
     $out->addHTML( Xml::element( 'h2', null, $this->msg( 'br-create-boilerplates' )->escaped() ) );
+
+    $defaultBoilerplateName = $this->msg( 'br-meta-std-bp-page' )->escaped();
+    $defaultBoilerplateTitle = Title::newFromText( $defaultBoilerplateName, NS_BOILERPLATE );
+    $defaultBoilerplateMsg = $this->makeLinks($defaultBoilerplateTitle) . ' is the default Boilerplate used when you create new ones.';
+    $out->addHTML( '<p>' . $defaultBoilerplateMsg . '</p>' );
+
     
     $out->addHTML( Xml::element( 'h3', null, $this->msg( 'br-create-std-bp' )->escaped() ) );
     $standardBPTitle = $this->chooseBoilerplate( 'br-meta-std-bp-page', 'br-meta-std-bp' );
@@ -50,10 +56,7 @@ class SpecialBoilerplate extends SpecialPage {
         
         if ( $title !== null ) {
           $ul .= Xml::openElement( 'li' );
-          $viewAttribs = Array( 'href' => $title->getLinkURL(), 'title' => $title->getPrefixedText() );
-          $ul .= Xml::element( 'a', $viewAttribs, $title->getText() );
-          $editAttribs = Array( 'href' => $title->getEditURL(), 'title' => $title->getPrefixedText() );
-          $ul .= ' (' . Xml::element( 'a', $editAttribs, 'edit' ) . ')';
+          $ul .= $this->makeLinks($title);
           $ul .= Xml::closeElement( 'li' );
         }
       }
@@ -67,6 +70,15 @@ class SpecialBoilerplate extends SpecialPage {
     $out->addHTML( Xml::element( 'p', null, $this->msg( 'br-boilerplate-list-note' )->parse() ) );
   }
   
+  private function makeLinks( $title ) {
+    $html = '';
+    $viewAttribs = Array( 'href' => $title->getLinkURL(), 'title' => $title->getPrefixedText() );
+    $html .= Xml::element( 'a', $viewAttribs, $title->getText() );
+    $editAttribs = Array( 'href' => $title->getEditURL(), 'title' => $title->getPrefixedText() );
+    $html .= ' (' . Xml::element( 'a', $editAttribs, 'edit' ) . ')';
+    return $html;
+  }
+
   /**
    * Checks the boilerplate identified by title in the given message to see if it has any boilerplate content. If so,
    * it returns the title. Otherwise, it returns the appropriate page title for the fallback. 
