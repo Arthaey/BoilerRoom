@@ -55,9 +55,17 @@ var boilerRoom = boilerRoom || {
       }
       messageBox.appendTo( '#boilerRoomSelectorContainer' );
 
+      // Find the second-to-last subpage part of the page title.
+      var titlePart;
+      var titleParts = mw.config.get( 'wgTitle' ).split( '/' );
+      if ( titleParts.length ===  1 ) {
+        titlePart = titleParts[0];
+      } else {
+        titlePart = titleParts.slice( -2, -1 );
+      }
+
       // Auto-use boilerplate that matches the page title, if page contents is blank.
-      var titleFirstPart = mw.config.get('wgTitle').split('/')[0];
-      var matchingTitle = `Boilerplate:${titleFirstPart}`;
+      var matchingTitle = `Boilerplate:${titlePart}`;
       var matchingOptions = $(`#boilerRoomSelect option[value="${matchingTitle}"]`);
       if ( matchingOptions.length === 1 ) {
         $('#boilerRoomSelect').val(matchingTitle);
